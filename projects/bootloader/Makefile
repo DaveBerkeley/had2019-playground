@@ -26,7 +26,7 @@ PROJ_TOP_MOD := top
 
 # Target config
 BOARD ?= oc-r02
-DEVICE = 45k
+DEVICE = 25k
 PACKAGE = CSFBGA285
 SPEEDGRADE = 8
 
@@ -53,6 +53,12 @@ $(BUILD_TMP)/$(PROJ).bit $(BUILD_TMP)/$(PROJ).svf: $(BUILD_TMP)/$(PROJ).config $
 
 dfu_flash: $(BUILD_TMP)/$(PROJ).bit
 	$(DFU_UTIL) -d 1d50:614a,1d50:614b -a 5 -R -D $<
+
+prog:
+	cp ./build-tmp/bootloader.bit ./build-tmp/bootloader.dfu
+	dfu-suffix -v 1209 -p 5af0 -a  ./build-tmp/bootloader.dfu
+	dfu-util -D ./build-tmp/bootloader.dfu
+
 
 # Always try to rebuild the hex file
 .PHONY: fw
